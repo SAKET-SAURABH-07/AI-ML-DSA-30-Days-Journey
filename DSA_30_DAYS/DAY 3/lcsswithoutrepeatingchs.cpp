@@ -5,7 +5,7 @@ using namespace std;
 int lengthOfLongestSubstring(string s) {
     unordered_map<char, int> mp;
 
-    int start = 0;   // left side of window
+    int start = 0;   
     int maxLen = 0;
 
     for (int i = 0; i < s.length(); i++) {
