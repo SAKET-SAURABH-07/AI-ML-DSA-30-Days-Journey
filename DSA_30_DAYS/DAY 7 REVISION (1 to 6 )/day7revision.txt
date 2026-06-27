@@ -1,0 +1,227 @@
+| # | Problem                                        | LeetCode Number  | Pattern                  |
+| - | ---------------------------------------------- | ---------------- | ------------------------ |
+| 1 | Two Sum                                        | **LeetCode 1**   | Array + HashMap          |
+| 2 | Maximum Subarray                               | **LeetCode 53**  | Kadane's Algorithm       |
+| 3 | Product of Array Except Self                   | **LeetCode 238** | Prefix/Suffix Product    |
+| 4 | Longest Substring Without Repeating Characters | **LeetCode 3**   | Sliding Window + HashMap |
+| 5 | Container With Most Water                      | **LeetCode 11**  | Two Pointer              |
+
+
+| 1 | Two Sum                                        | **LeetCode 1**   | Array + HashMap          :
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+
+        for(int i = 0; i < nums.size(); i++) {
+
+            for(int j = i + 1; j < nums.size(); j++) {
+
+                if(nums[i] + nums[j] == target) {
+                    return {i, j};
+                }
+
+            }
+        }
+
+        return {};
+    }
+};
+
+Optimised approach : using HashMap
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+
+        unordered_map<int, int> mp;
+
+        for(int i = 0; i < nums.size(); i++) {
+
+            int current = nums[i];
+            int need = target - current;
+
+            if(mp.find(need) != mp.end()) {
+                return {mp[need], i};
+            }
+
+            mp[current] = i;
+        }
+
+        return {};
+    }
+};
+
+
+2 | Maximum Subarray                               | **LeetCode 53**  | Kadane's Algorithm   :
+kadane's algo:
+
+class Solution {
+public:
+    
+    int maxSubArray(vector<int>& nums) {
+        int currentsum = 0;
+        int maxsum = INT_MIN;
+
+        for(int i=0 ; i < nums.size() ; i++){
+            
+            currentsum += nums[i];
+            maxsum = max(currentsum , maxsum);
+
+            if(currentsum < 0){
+                currentsum = 0;
+            }
+
+            
+        }
+        return maxsum;
+
+
+        
+    }
+};
+
+ 3 | Product of Array Except Self                   | **LeetCode 238** | Prefix/Suffix Product    |
+ BRUTE FORCE approach:
+
+ class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+
+        vector<int> ans(nums.size());
+
+        for(int i = 0; i < nums.size(); i++) {
+
+            int prod = 1;
+
+            for(int j = 0; j < nums.size(); j++) {
+
+                if(i != j) {
+                    prod *= nums[j];
+                }
+
+            }
+
+            ans[i] = prod;
+        }
+
+        return ans;
+    }
+};
+
+LEETCODE ERROR : Time Limit Exceeded
+18 / 24 testcases passed
+
+Optimised for O(n):
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+
+        int n = nums.size();
+
+        vector<int> ans(n, 1);
+
+        
+        for(int i = 1; i < n; i++) {
+            ans[i] = ans[i - 1] * nums[i - 1];
+        }
+
+        
+        int suffix = 1;
+
+        for(int i = n - 2; i >= 0; i--) {
+            suffix *= nums[i + 1];
+            ans[i] *= suffix;
+        }
+
+        return ans;
+    }
+};
+
+ 4 | Longest Substring Without Repeating Characters | **LeetCode 3**   | Sliding Window + HashMap :
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+
+        unordered_map<char, int> mp;
+
+        int left = 0;
+        int maxLength = 0;
+
+        for(int right = 0; right < s.length(); right++) {
+
+            char ch = s[right];
+
+           
+            if(mp.find(ch) != mp.end()) {
+                left = max(left, mp[ch] + 1);
+            }
+
+            
+            mp[ch] = right;
+
+            
+            maxLength = max(maxLength, right - left + 1);
+        }
+
+        return maxLength;
+    }
+};
+
+| 5 | Container With Most Water                      | **LeetCode 11**  | Two Pointer              :
+BRUTE FORCE approach:
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+
+        int maxarea = 0;
+        int area;
+        for(int i=0 ; i< height.size() ; i++){
+            for(int j= i+1 ; j < height.size() ; j++ ){
+
+                int w = j - i;
+                int h = min(height[i] , height[j]);
+                area = w * h;
+                maxarea = max(maxarea , area);
+            }
+        }
+        return maxarea;
+        
+    }
+};
+
+leetcode error :
+
+Time Limit Exceeded
+58 / 65 testcases passed
+
+
+Optimal approach:
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+
+        int left = 0;
+        int right = height.size() - 1;
+
+        int maxArea = 0;
+
+        while(left < right) {
+
+            int width = right - left;
+            int h = min(height[left], height[right]);
+
+            int area = width * h;
+
+            maxArea = max(maxArea, area);
+
+            if(height[left] < height[right]) {
+                left++;
+            }
+            else {
+                right--;
+            }
+        }
+
+        return maxArea;
+    }
+};
