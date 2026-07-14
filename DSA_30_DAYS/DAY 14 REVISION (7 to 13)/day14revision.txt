@@ -1,0 +1,378 @@
+DSA Revision Notes
+
+  #    Problem                        LeetCode Number   Pattern
+  ---- ------------------------------ ----------------- ---------------------
+  1    Reverse Linked List            LeetCode 206      Linked List
+  2    Middle of the Linked List      LeetCode 876      Fast & Slow Pointer
+  3    Valid Parentheses              LeetCode 20       Stack
+  4    Min Stack                      LeetCode 155      Stack Design
+  5    Implement Queue using Stacks   LeetCode 232      Queue
+  6    Number of Recent Calls         LeetCode 933      Queue
+  7    Fibonacci Number               LeetCode 509      Recursion
+  8    Pow(x, n)                      LeetCode 50       Divide & Conquer
+  9    Subsets                        LeetCode 78       Backtracking
+  10   Permutations                   LeetCode 46       Backtracking
+
+
+1    Reverse Linked List            LeetCode 206      Linked List:
+ /**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        
+    ListNode* prev = NULL;
+    ListNode* current = head;
+    ListNode* next = NULL;
+
+    while(current != NULL){
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    return prev;
+
+        
+    }
+};
+
+2    Middle of the Linked List      LeetCode 876      Fast & Slow Pointer:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+
+public:
+
+    ListNode* middleNode(ListNode* head) {
+
+        ListNode* counter = head;
+        int icounter = 0;
+
+        while(counter != NULL){
+
+            icounter++;
+            counter = counter->next;
+        }
+
+        int middle = icounter / 2;
+
+        ListNode* trav = head;
+
+        for(int i = 0; i < middle; i++){
+
+            trav = trav->next;
+        }
+
+        return trav;
+    }
+
+};
+
+3    Valid Parentheses              LeetCode 20       Stack:
+class Solution {
+public:
+    bool isValid(string s) {
+
+        stack<char> st;
+
+        for(int i = 0; i < s.size(); i++){
+
+            if(s[i] == '[' || s[i] == '{' || s[i] == '('){
+
+                st.push(s[i]);
+
+            }
+
+            if(s[i] == ']' || s[i] == '}' || s[i] == ')'){
+
+                
+                if(st.empty()){
+                    return false;
+                }
+
+                if(s[i] == ']' && st.top() == '['){
+
+                    st.pop();
+
+                }
+                else if(s[i] == '}' && st.top() == '{'){
+
+                    st.pop();
+
+                }
+                else if(s[i] == ')' && st.top() == '('){
+
+                    st.pop();
+
+                }
+                else{
+                    return false;
+                }
+
+            }
+        }
+
+        if(st.empty()){
+            return true;
+        }
+
+        return false;
+    }
+};
+
+ 4    Min Stack                      LeetCode 155      Stack Design
+ class MinStack {
+public:
+
+    stack<long long int> s;
+    long long int minVal;
+
+    MinStack() {
+
+    }
+
+    void push(int val) {
+
+        if (s.empty()) {
+
+            s.push(val);
+            minVal = val;
+
+        }
+        else {
+
+            if(val < minVal){
+                s.push((long long)2*val - minVal);
+                minVal = val;
+
+                
+            }else{
+                s.push(val);
+            }
+        }
+    }
+
+    void pop() {
+
+        if(s.top() < minVal){
+            minVal = 2*minVal - s.top();
+        }
+        s.pop();
+
+    }
+
+    int top() {
+
+        if(s.top() < minVal){
+            return minVal;
+        }
+        return s.top();
+
+    }
+
+    int getMin() {
+
+        return minVal;
+
+    }
+};
+
+5    Implement Queue using Stacks   LeetCode 232      Queue:
+class MyQueue {
+public:
+    stack<int> input;
+    stack<int> output;
+
+    MyQueue() {
+
+    }
+
+    void push(int x) {
+        input.push(x);
+    }
+
+    int pop() {
+
+        if(output.empty()) {
+            while(!input.empty()) {
+                output.push(input.top());
+                input.pop();
+            }
+        }
+
+        int front = output.top();
+        output.pop();
+
+        return front;
+    }
+
+    int peek() {
+
+        if(output.empty()) {
+            while(!input.empty()) {
+                output.push(input.top());
+                input.pop();
+            }
+        }
+
+        return output.top();
+    }
+
+    bool empty() {
+        return input.empty() && output.empty();
+    }
+};
+
+6    Number of Recent Calls         LeetCode 933      Queue:
+class RecentCounter {
+public:
+
+    queue<int> q;
+
+    RecentCounter() {
+
+    }
+
+    int ping(int t) {
+
+        q.push(t);
+
+        while(q.front() < t - 3000) {
+            q.pop();
+        }
+
+        return q.size();
+    }
+};
+
+/**
+ * Your RecentCounter object will be instantiated and called as such:
+ * RecentCounter* obj = new RecentCounter();
+ * int param_1 = obj->ping(t);
+ */
+
+7    Fibonacci Number               LeetCode 509      Recursion:
+ class Solution {
+public:
+    int fib(int n) {
+
+        if(n==1){
+            return 1;
+        }
+        if(n==0){
+            return 0;
+        }
+        
+        return fib(n-1) + fib(n-2);
+        
+    }
+};
+
+8    Pow(x, n)                      LeetCode 50       Divide & Conquer:
+class Solution {
+public:
+    double myPow(double x, int n) {
+
+        long long power = n;
+        double ans = 1;
+
+        if(power < 0) {
+            x = 1 / x;
+            power = -power;
+        }
+
+        while(power > 0) {
+
+            if(power % 2 == 1) {
+                ans *= x;
+            }
+
+            x *= x;
+            power /= 2;
+        }
+
+        return ans;
+    }
+};
+
+9    Subsets                        LeetCode 78       Backtracking:
+class Solution {
+public:
+
+    void solve(int index, vector<int>& nums, vector<int>& temp, vector<vector<int>>& ans)
+    {
+        if(index == nums.size())
+        {
+            ans.push_back(temp);
+            return;
+        }
+
+        // Include current element
+        temp.push_back(nums[index]);
+        solve(index + 1, nums, temp, ans);
+
+        // Backtrack
+        temp.pop_back();
+
+        // Exclude current element
+        solve(index + 1, nums, temp, ans);
+    }
+
+    vector<vector<int>> subsets(vector<int>& nums) {
+
+        vector<vector<int>> ans;
+        vector<int> temp;
+
+        solve(0, nums, temp, ans);
+
+        return ans;
+    }
+};
+
+10   Permutations                   LeetCode 46       Backtracking:
+class Solution {
+public:
+
+    void backtrack(vector<int>& nums, int start, vector<vector<int>>& result) {
+
+        if(start == nums.size()) {
+            result.push_back(nums);
+            return;
+        }
+
+        for(int i = start; i < nums.size(); i++) {
+
+            swap(nums[start], nums[i]);
+
+            backtrack(nums, start + 1, result);
+
+            swap(nums[start], nums[i]);
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+
+        vector<vector<int>> result;
+
+        backtrack(nums, 0, result);
+
+        return result;
+    }
+};
