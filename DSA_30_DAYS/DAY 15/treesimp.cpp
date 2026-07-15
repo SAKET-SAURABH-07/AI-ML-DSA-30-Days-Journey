@@ -12,7 +12,6 @@ class Node {
         left = right = NULL;
         
     }
-
 };
 static int idx = -1;
 
